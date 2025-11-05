@@ -1,0 +1,10 @@
+{
+  "gui.mae2a.target_all": "Target all",
+  "gui.mae2a.target_mode_tip": "Toggle the magnification mode target",
+  "gui.mae2a.pattern_rate_input_divide": "Specify the number of ➗ raw materials in multiples, and the non-divisible part will be skipped",
+  "gui.mae2a.pattern_rate_output_divide": "Specify a multiple of the number of ➗ products, and the non-divisible part will be skipped",
+  "gui.mae2a.pattern_rate_both_divide": "Specify the number of products and raw materials in ➗ multiples, and the non-divisible part will be skipped",
+  "gui.mae2a.pattern_rate_input_multiply": "Specify multiples of the quantity of ✖ raw materials",
+  "gui.mae2a.pattern_rate_output_multiply": "Specify a multiple of the product quantity ✖",
+  "gui.mae2a.pattern_rate_both_multiply": "Specify multiples of the product and raw material quantity ✖"
+}

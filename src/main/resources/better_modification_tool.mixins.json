@@ -1,0 +1,18 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.savitor.better_modification_tool.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "mixins": [
+    "mae.common.items.PatternModifyToolItemMixin",
+    "mae.common.menu.PatternModifyMenuMixin",
+    "mae.common.menu.PatternPreviewListMenuMixin",
+    "mae.common.menu.host.PatternModifyHostMixin",
+    "mae.common.setting.PatternModifySetting",
+    "mae.util.PatternUtilsMixin"
+  ],
+  "client": [
+    "mae.client.screen.PatternModifyScreenMixin"
+  ],
+  "server": []
+}

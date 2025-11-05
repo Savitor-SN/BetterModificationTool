@@ -1,0 +1,10 @@
+{
+  "gui.mae2a.target_all": "全部",
+  "gui.mae2a.target_mode_tip": "切换倍率模式目标",
+  "gui.mae2a.pattern_rate_input_divide": "将原料数量➗指定倍数, 无法整除部分将被跳过",
+  "gui.mae2a.pattern_rate_output_divide": "将产物数量➗指定倍数, 无法整除部分将被跳过",
+  "gui.mae2a.pattern_rate_both_divide": "将产物和原料数量➗指定倍数, 无法整除部分将被跳过",
+  "gui.mae2a.pattern_rate_input_multiply": "将原料数量✖指定倍数",
+  "gui.mae2a.pattern_rate_output_multiply": "将产物数量✖指定倍数",
+  "gui.mae2a.pattern_rate_both_multiply": "将产物和原料数量✖指定倍数"
+}
