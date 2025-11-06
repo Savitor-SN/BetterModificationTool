@@ -14,10 +14,9 @@ import com.easterfg.mae2a.common.menu.PatternModifyMenu;
 import com.easterfg.mae2a.common.menu.PatternPreviewListMenu;
 import com.easterfg.mae2a.common.settings.PatternModifySetting;
 import com.easterfg.mae2a.util.PatternUtils;
-import com.gregtechceu.gtceu.api.blockentity.MetaMachineBlockEntity;
-import com.savitor.better_modification_tool.BetterModifyToolMod;
 import com.savitor.better_modification_tool.common.accessor.SettingTargetModeAccessor;
 import com.savitor.better_modification_tool.common.context.PatternTargetModeContext;
+import com.savitor.better_modification_tool.util.GTLLoadedUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -27,7 +26,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import org.gtlcore.gtlcore.common.machine.multiblock.part.ae.MEPatternBufferPartMachine;
+import net.minecraftforge.fml.ModList;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
@@ -35,8 +34,6 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 import static com.easterfg.mae2a.common.items.PatternModifyToolItem.findPartInCable;
 
@@ -70,11 +67,14 @@ public abstract class PatternModifyToolItemMixin {
             PatternContainer container = null;
             BlockEntity te = level.getBlockEntity(pos);
             IPart cable = findPartInCable(level, pos, useContext.getClickLocation());
-            if (te instanceof MetaMachineBlockEntity mmbe && mmbe.getMetaMachine() instanceof MEPatternBufferPartMachine me) {
-                container = me;
-            }
-            if (cable == null && te instanceof PatternContainer) {
-                container = (PatternContainer) te;
+            if (cable == null) {
+                if (te instanceof PatternContainer) {
+                    container = (PatternContainer) te;
+                } else {
+                    if (ModList.get().isLoaded("gtceu") && ModList.get().isLoaded("gtlcore")) {
+                        container = GTLLoadedUtil.gtlMe(te);
+                    }
+                }
             } else {
                 if (cable instanceof PatternContainer) {
                     container = (PatternContainer) cable;
@@ -102,9 +102,11 @@ public abstract class PatternModifyToolItemMixin {
     @Inject(
             method = "applyInAll",
             at = @At("HEAD"),
-            remap = false
-    )
+            remap = false,
+            cancellable = true)
     private void onApplyInAllStart(Player p, Level level, IInWorldGridNodeHost nodeHost, PatternModifySetting setting, CallbackInfo ci) {
+        if (!p.isShiftKeyDown())
+            ci.cancel();
         PatternTargetModeContext.setTargetMode(((SettingTargetModeAccessor) setting).BMT$getTargetMode());
     }
 
@@ -117,9 +119,27 @@ public abstract class PatternModifyToolItemMixin {
         PatternTargetModeContext.clear();
     }
 
-    @Inject(method = "onItemUseFirst", at = @At("RETURN"), remap = false)
-    public void onItemUseFirst(ItemStack stack, UseOnContext context, CallbackInfoReturnable<InteractionResult> cir) {
+    /**
+     * @author Savitor
+     * @reason 新增功能适配
+     */
+    @Overwrite(remap = false)
+    public InteractionResult onItemUseFirst(ItemStack stack, UseOnContext context) {
+        Player player = context.getPlayer();
+        if (player == null)
+            return InteractionResult.FAIL;
+
+        Level level = context.getLevel();
+
         CompoundTag tag = stack.getOrCreateTag();
+        tag.put("hitPos", PatternUtils.writeVec3(context.getClickLocation()));
         tag.put("hitPos1", PatternUtils.writeVec3(context.getClickLocation()));
+
+        if (!level.isClientSide()) {
+            if (!showToolGui(stack, context)) {
+                return InteractionResult.FAIL;
+            }
+        }
+        return InteractionResult.sidedSuccess(level.isClientSide());
     }
 }

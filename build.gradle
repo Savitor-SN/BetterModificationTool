@@ -5,11 +5,11 @@ plugins {
     id 'com.github.johnrengelman.shadow' version '8.1.1'
 }
 
-version = mod_version
 group = mod_group_id
 
 base {
-    archivesName = mod_id
+    archivesName = "BetterModificationTool"
+    version = mod_version
 }
 //
 loom {
@@ -23,16 +23,16 @@ java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 processResources {
     // set up properties for filling into metadata
     var properties = [
-            "mod_license"      : mod_license,
-            "mod_id"           : mod_id,
-            "mod_version"      : version,
-            "mod_authors"      : mod_authors,
-            "mod_name"         : mod_name,
-            "mod_description"  : mod_description,
-            "forge_version"    : forge_version.split("\\.")[0], // only specify major version of forge
-            "minecraft_version": minecraft_version,
-            "forge_version_range":forge_version_range,
-            "minecraft_version_range":minecraft_version_range
+            "mod_license"            : mod_license,
+            "mod_id"                 : mod_id,
+            "mod_version"            : version,
+            "mod_authors"            : mod_authors,
+            "mod_name"               : mod_name,
+            "mod_description"        : mod_description,
+            "forge_version"          : forge_version.split("\\.")[0], // only specify major version of forge
+            "minecraft_version"      : minecraft_version,
+            "forge_version_range"    : forge_version_range,
+            "minecraft_version_range": minecraft_version_range
     ]
     inputs.properties(properties)
 
@@ -143,7 +143,7 @@ java {
     // Loom will automatically attach sourcesJar to a RemapSourcesJar task and to the "build" task
     // if it is present.
     // If you remove this line, sources will not be generated.
-    withSourcesJar()
+//    withSourcesJar()
 
     sourceCompatibility = JavaVersion.VERSION_17
     targetCompatibility = JavaVersion.VERSION_17

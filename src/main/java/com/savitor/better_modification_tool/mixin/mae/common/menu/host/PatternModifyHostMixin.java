@@ -1,7 +1,6 @@
 package com.savitor.better_modification_tool.mixin.mae.common.menu.host;
 
 import appeng.api.inventories.InternalInventory;
-import com.easterfg.mae2a.common.items.PatternModifyToolItem;
 import com.easterfg.mae2a.common.menu.host.PatternModifyHost;
 import com.easterfg.mae2a.common.settings.PatternModifySetting;
 import com.easterfg.mae2a.util.PatternUtils;
@@ -10,7 +9,6 @@ import com.savitor.better_modification_tool.common.accessor.HostTargetModeAccess
 import com.savitor.better_modification_tool.common.accessor.SettingTargetModeAccessor;
 import com.savitor.better_modification_tool.common.setting.TargetMode;
 import com.savitor.better_modification_tool.util.ExtraPatternUtils;
-import lombok.Getter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Player;
@@ -25,7 +23,6 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 import java.util.List;
 
@@ -43,13 +40,13 @@ public abstract class PatternModifyHostMixin implements HostTargetModeAccessor, 
     @Shadow(remap = false)
     private List<ItemStack> patterns;
 
-    @Getter
     @Nullable
     @Unique
     private InternalInventory BMT$internalInventory;
 
     @Inject(method = "<init>", at = @At("RETURN"), remap = false)
     public void PatternModifyHost(Player player, Integer slot, ItemStack itemStack, BlockPos clickPos, CallbackInfo ci) {
+        patterns = null;
         Vec3 hitPos = null;
         if (itemStack.hasTag()) {
             CompoundTag tag = itemStack.getOrCreateTag();
@@ -58,10 +55,10 @@ public abstract class PatternModifyHostMixin implements HostTargetModeAccessor, 
             tag.remove("hitPos1");
         }
         if (hitPos != null && clickPos != null) {
-            Level level1 = player.getCommandSenderWorld();
-            BMT$internalInventory = ExtraPatternUtils.findInternalInventory(level1, clickPos, hitPos);
+            Level level = player.getCommandSenderWorld();
+            BMT$internalInventory = ExtraPatternUtils.findInternalInventory(level, clickPos, hitPos);
             if (BMT$internalInventory != null) {
-                patterns = ExtraPatternUtils.getProcessingPatterns(level1, BMT$internalInventory, setting, player.isShiftKeyDown());
+                patterns = ExtraPatternUtils.getProcessingPatterns(level, BMT$internalInventory, setting, player.isShiftKeyDown());
             }
         }
     }
@@ -83,7 +80,7 @@ public abstract class PatternModifyHostMixin implements HostTargetModeAccessor, 
     }
 
     @Override
-    public InternalInventory BMT$getInternalInventory() {
+    public @Nullable InternalInventory BMT$getInternalInventory() {
         return this.BMT$internalInventory;
     }
 }
