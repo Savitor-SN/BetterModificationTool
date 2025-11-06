@@ -34,7 +34,6 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import static com.easterfg.mae2a.common.items.PatternModifyToolItem.findPartInCable;
 
@@ -68,11 +67,14 @@ public abstract class PatternModifyToolItemMixin {
             PatternContainer container = null;
             BlockEntity te = level.getBlockEntity(pos);
             IPart cable = findPartInCable(level, pos, useContext.getClickLocation());
-            if (ModList.get().isLoaded("gtceu") && ModList.get().isLoaded("gtlcore")) {
-                container = GTLLoadedUtil.gtlMe(te);
-            }
-            if (cable == null && te instanceof PatternContainer) {
-                container = (PatternContainer) te;
+            if (cable == null) {
+                if (te instanceof PatternContainer) {
+                    container = (PatternContainer) te;
+                } else {
+                    if (ModList.get().isLoaded("gtceu") && ModList.get().isLoaded("gtlcore")) {
+                        container = GTLLoadedUtil.gtlMe(te);
+                    }
+                }
             } else {
                 if (cable instanceof PatternContainer) {
                     container = (PatternContainer) cable;
@@ -117,9 +119,27 @@ public abstract class PatternModifyToolItemMixin {
         PatternTargetModeContext.clear();
     }
 
-    @Inject(method = "onItemUseFirst", at = @At(value = "INVOKE_ASSIGN", target = "Lnet/minecraft/world/item/context/UseOnContext;getLevel()Lnet/minecraft/world/level/Level;"), remap = false)
-    public void onItemUseFirst(ItemStack stack, UseOnContext context, CallbackInfoReturnable<InteractionResult> cir) {
+    /**
+     * @author Savitor
+     * @reason 新增功能适配
+     */
+    @Overwrite(remap = false)
+    public InteractionResult onItemUseFirst(ItemStack stack, UseOnContext context) {
+        Player player = context.getPlayer();
+        if (player == null)
+            return InteractionResult.FAIL;
+
+        Level level = context.getLevel();
+
         CompoundTag tag = stack.getOrCreateTag();
+        tag.put("hitPos", PatternUtils.writeVec3(context.getClickLocation()));
         tag.put("hitPos1", PatternUtils.writeVec3(context.getClickLocation()));
+
+        if (!level.isClientSide()) {
+            if (!showToolGui(stack, context)) {
+                return InteractionResult.FAIL;
+            }
+        }
+        return InteractionResult.sidedSuccess(level.isClientSide());
     }
 }

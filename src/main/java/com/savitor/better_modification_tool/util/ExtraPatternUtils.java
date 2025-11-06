@@ -3,11 +3,9 @@ package com.savitor.better_modification_tool.util;
 import appeng.api.inventories.InternalInventory;
 import appeng.api.parts.IPart;
 import appeng.core.definitions.AEItems;
-import appeng.helpers.patternprovider.PatternProviderLogic;
 import appeng.helpers.patternprovider.PatternProviderLogicHost;
 import com.easterfg.mae2a.common.settings.PatternModifySetting;
 import com.easterfg.mae2a.util.PatternUtils;
-import com.gregtechceu.gtceu.api.blockentity.MetaMachineBlockEntity;
 import com.savitor.better_modification_tool.common.accessor.SettingTargetModeAccessor;
 import com.savitor.better_modification_tool.common.context.PatternTargetModeContext;
 import net.minecraft.core.BlockPos;
@@ -15,7 +13,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.fml.ModList;
-import org.gtlcore.gtlcore.common.machine.multiblock.part.ae.MEPatternBufferPartMachine;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -54,18 +51,19 @@ public class ExtraPatternUtils {
 
     @Nullable
     public static InternalInventory findInternalInventory(Level level, BlockPos pos, Vec3 hit) {
+        InternalInventory internalInventory = null;
         var te = level.getBlockEntity(pos);
         if (ModList.get().isLoaded("gtceu") && ModList.get().isLoaded("gtlcore")) {
-           return GTLLoadedUtil.gtlInventory(te);
+            internalInventory = GTLLoadedUtil.gtlInventory(te);
         }
         if (te instanceof PatternProviderLogicHost host) {
-            return host.getLogic().getPatternInv();
+            internalInventory = host.getLogic().getPatternInv();
         } else {
             IPart cable = findPartInCable(level, pos, hit);
             if (cable instanceof PatternProviderLogicHost host) {
-                return host.getLogic().getPatternInv();
+                internalInventory = host.getLogic().getPatternInv();
             }
         }
-        return null;
+        return internalInventory;
     }
 }
