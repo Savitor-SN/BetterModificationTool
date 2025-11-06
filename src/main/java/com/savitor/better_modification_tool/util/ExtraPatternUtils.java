@@ -14,6 +14,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.fml.ModList;
 import org.gtlcore.gtlcore.common.machine.multiblock.part.ae.MEPatternBufferPartMachine;
 import org.jetbrains.annotations.Nullable;
 
@@ -54,8 +55,8 @@ public class ExtraPatternUtils {
     @Nullable
     public static InternalInventory findInternalInventory(Level level, BlockPos pos, Vec3 hit) {
         var te = level.getBlockEntity(pos);
-        if (te instanceof MetaMachineBlockEntity mmbe && mmbe.getMetaMachine() instanceof MEPatternBufferPartMachine me) {
-            return me.getTerminalPatternInventory();
+        if (ModList.get().isLoaded("gtceu") && ModList.get().isLoaded("gtlcore")) {
+           return GTLLoadedUtil.gtlInventory(te);
         }
         if (te instanceof PatternProviderLogicHost host) {
             return host.getLogic().getPatternInv();

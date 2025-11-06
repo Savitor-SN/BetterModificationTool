@@ -12,6 +12,7 @@ import com.savitor.better_modification_tool.common.setting.TargetMode;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -24,11 +25,6 @@ import java.util.List;
 
 @Mixin(PatternUtils.class)
 public abstract class PatternUtilsMixin {
-
-    @Shadow(remap = false)
-    private static GenericStack[] scaleOutputs(GenericStack[] outputs, GenericStack primary, int times, boolean multiplyMode, boolean hasByProducts) {
-        return null;
-    }
 
     @Shadow(remap = false)
     public static GenericStack[] scaleStacks(GenericStack[] stacks, int times, boolean multiplyMode) {
@@ -52,6 +48,37 @@ public abstract class PatternUtilsMixin {
         } else
             cir.setReturnValue(PatternDetailsHelper.encodeProcessingPattern(newInputs, newOutput));
         cir.cancel();
+    }
+
+    /**
+     * @author Savitor
+     * @reason 修复逻辑错误
+     */
+    @Overwrite(remap = false)
+    private static GenericStack[] scaleOutputs(GenericStack[] outputs, GenericStack primary,
+                                               int times, boolean multiplyMode, boolean hasByProducts) {
+        GenericStack[] scaled = new GenericStack[outputs.length];
+
+        // primary
+        long newAmount;
+        if (multiplyMode) {
+            newAmount = primary.amount() * times;
+        } else {
+            if (primary.amount() % times != 0) {
+                return null;
+            }
+            newAmount = primary.amount() / times;
+        }
+        if (newAmount <= 0)
+            return null;
+        scaled[0] = new GenericStack(primary.what(), newAmount);
+
+        // other
+        if (hasByProducts && outputs.length > 1) {
+            System.arraycopy(outputs, 1, scaled, 1, outputs.length - 1);
+        }
+
+        return scaled;
     }
 
 //    @Inject(

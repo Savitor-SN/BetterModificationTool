@@ -50,6 +50,7 @@ public abstract class PatternModifyHostMixin implements HostTargetModeAccessor, 
 
     @Inject(method = "<init>", at = @At("RETURN"), remap = false)
     public void PatternModifyHost(Player player, Integer slot, ItemStack itemStack, BlockPos clickPos, CallbackInfo ci) {
+        patterns = null;
         Vec3 hitPos = null;
         if (itemStack.hasTag()) {
             CompoundTag tag = itemStack.getOrCreateTag();
