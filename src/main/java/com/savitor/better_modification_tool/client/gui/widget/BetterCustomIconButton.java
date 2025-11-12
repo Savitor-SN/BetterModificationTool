@@ -21,7 +21,6 @@ import java.util.function.Supplier;
  * @author EasterFG
  * 此类基于于EasterFG的CustomIconButton类，遵循gpl-3.0协议
  */
-@OnlyIn(Dist.CLIENT)
 public class BetterCustomIconButton extends Button implements ITooltip {
 
     private final List<Blitter> textures;
@@ -54,13 +53,18 @@ public class BetterCustomIconButton extends Button implements ITooltip {
                 guiGraphics.fill(getX() - 1, getY() + height, getX() + width + 1, getY() + height + 1, 0xFFFFFFFF);
             }
 
-            Icon.TOOLBAR_BUTTON_BACKGROUND.getBlitter().dest(getX(), getY()).blit(guiGraphics);
+            guiGraphics.pose().translate(getX(), getY(), 0);
+            float scaleX = (float) width / 16.0F;
+            float scaleY = (float) height / 16.0F;
+            guiGraphics.pose().scale(scaleX, scaleY, 1.0F);
+
+            Icon.TOOLBAR_BUTTON_BACKGROUND.getBlitter().dest(0, 0).blit(guiGraphics);
 
             int currentState = Math.abs(statusSupplier.get()) % textures.size();
             final Blitter currentTexture = textures.get(currentState);
 
             RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-            currentTexture.dest(getX(), getY()).blit(guiGraphics);
+            currentTexture.dest(0, 0).blit(guiGraphics);
 
             RenderSystem.enableDepthTest();
             RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);

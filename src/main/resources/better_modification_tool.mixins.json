@@ -2,8 +2,11 @@
   "required": true,
   "minVersion": "0.8",
   "package": "com.savitor.better_modification_tool.mixin",
+  "plugin": "com.savitor.better_modification_tool.mixin.MainMixinConfig",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
+    "gtlcore.ae2.client.gui.StyleManagerMixin",
+    "gtlcore.ae2.client.gui.WidgetContainerMixin",
     "mae.common.items.PatternModifyToolItemMixin",
     "mae.common.menu.PatternModifyMenuMixin",
     "mae.common.menu.PatternPreviewListMenuMixin",
@@ -12,6 +15,8 @@
     "mae.util.PatternUtilsMixin"
   ],
   "client": [
+    "gtlcore.ae2.client.gui.PatternEncodingTermMenuMixin",
+    "gtlcore.ae2.client.gui.ProcessingEncodingPanelMixin",
     "mae.client.screen.PatternModifyScreenMixin"
   ],
   "server": []

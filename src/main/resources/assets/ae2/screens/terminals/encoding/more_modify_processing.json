@@ -1,0 +1,9 @@
+{
+  "$schema": "../../schema.json",
+  "widgets": {
+    "modifyType": {
+      "left": 100,
+      "bottom": 163
+    }
+  }
+}
