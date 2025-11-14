@@ -21,7 +21,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
  * @author Savitor
  * 代码参考于gtlcore
  */
-@Mixin(value = ProcessingEncodingPanel.class, priority = 2000)
+@Mixin(value = ProcessingEncodingPanel.class, priority = 500)
 public abstract class ProcessingEncodingPanelMixin extends EncodingModePanel {
 
     @Unique
@@ -101,13 +101,14 @@ public abstract class ProcessingEncodingPanelMixin extends EncodingModePanel {
         ci.cancel();
     }
 
-    @Inject(method = "setVisible", at = @At("TAIL"), remap = false)
+    @Inject(method = "setVisible", at = @At("TAIL"), remap = false, cancellable = true)
     public void setVisibleHooks(boolean visible, CallbackInfo ci) {
         this.BMT$modifyTypeBtn.setVisibility(visible);
         for (int i = 0; i < BMT$rate.length; i++) {
             BMT$multiple[i].setVisibility(visible);
             BMT$dividing[i].setVisibility(visible);
         }
+        ci.cancel();
     }
 
 }
