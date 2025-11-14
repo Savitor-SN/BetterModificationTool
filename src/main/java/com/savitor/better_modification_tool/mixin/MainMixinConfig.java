@@ -21,6 +21,11 @@ public class MainMixinConfig implements IMixinConfigPlugin {
 
     @Override
     public boolean shouldApplyMixin(String targetClassName, String mixinClassName) {
+//        if (mixinClassName.contains("com.savitor.better_modification_tool.mixin.mae")) {
+//            return modList != null ? modList.getModContainerById("mae2a")
+//                    .isPresent() :
+//                    loadingModList.getModFileById("mae2a") != null;
+//        } else
         return true;
     }
 
