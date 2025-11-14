@@ -21,12 +21,7 @@ public class MainMixinConfig implements IMixinConfigPlugin {
 
     @Override
     public boolean shouldApplyMixin(String targetClassName, String mixinClassName) {
-        if (mixinClassName.contains("gtlcore")) {
-            return modList != null ?
-                    modList.getModContainerById("gtlcore")
-                            .isPresent() :
-                    loadingModList.getModFileById("gtlcore") != null;
-        } else return false;
+        return true;
     }
 
     @Override

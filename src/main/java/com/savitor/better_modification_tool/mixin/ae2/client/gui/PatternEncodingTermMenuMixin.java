@@ -1,4 +1,4 @@
-package com.savitor.better_modification_tool.mixin.gtlcore.ae2.client.gui;
+package com.savitor.better_modification_tool.mixin.ae2.client.gui;
 
 import appeng.api.stacks.GenericStack;
 import appeng.api.storage.ITerminalHost;
@@ -18,7 +18,11 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(value = PatternEncodingTermMenu.class)
+/**
+ * @author Savitor
+ * 代码参考于gtlcore
+ */
+@Mixin(value = PatternEncodingTermMenu.class,priority = 2000)
 public abstract class PatternEncodingTermMenuMixin extends MEStorageMenu implements IMenuCraftingPacket, PatterEncodingTermMenuAccessor {
 
     @Shadow(remap = false)
@@ -36,33 +40,33 @@ public abstract class PatternEncodingTermMenuMixin extends MEStorageMenu impleme
             at = @At("TAIL"),
             remap = false)
     public void initHooks(MenuType<?> menuType, int id, Inventory ip, IPatternTerminalMenuHost host, boolean bindInventory, CallbackInfo ci) {
-        this.registerClientAction("BTM$modifyPatter", ModifyPatterParm.class,
+        this.registerClientAction("BMT$modifyPatter", ModifyPatterParm.class,
                 this::BMT$modifyPatter);
     }
 
     @Override
     public void BMT$modifyPatter(ModifyPatterParm parm) {
         if (this.isClientSide()) {
-            this.sendClientAction("BTM$modifyPatter", parm);
+            this.sendClientAction("BMT$modifyPatter", parm);
         } else {
             // modify
-            var output = BMT$valid(this.encodedOutputsInv, parm.getModifyRatio());
-            if (output == null) {
-                return;
-            }
-            var input = BMT$valid(this.encodedInputsInv, parm.getModifyRatio());
-            if (input == null) {
-                return;
-            }
             if (parm.getModifyTarget() == TargetMode.BOTH || parm.getModifyTarget() == TargetMode.OUTPUT) {
-                for (int slot = 0; slot < output.length; ++slot) {
+                var output = BMT$valid(this.encodedOutputsInv, parm.getModifyRatio());
+                if (output == null) {
+                    return;
+                }
+                for (int slot = 0; slot < output.length; slot++) {
                     if (output[slot] != null) {
                         this.encodedOutputsInv.setStack(slot, output[slot]);
                     }
                 }
             }
             if (parm.getModifyTarget() == TargetMode.BOTH || parm.getModifyTarget() == TargetMode.INPUT) {
-                for (int slot = 0; slot < input.length; ++slot) {
+                var input = BMT$valid(this.encodedInputsInv, parm.getModifyRatio());
+                if (input == null) {
+                    return;
+                }
+                for (int slot = 0; slot < input.length; slot++) {
                     if (input[slot] != null) {
                         this.encodedInputsInv.setStack(slot, input[slot]);
                     }
@@ -79,7 +83,7 @@ public abstract class PatternEncodingTermMenuMixin extends MEStorageMenu impleme
             data = -data;
         }
         GenericStack[] result = new GenericStack[inv.size()];
-        for (int slot = 0; slot < inv.size(); ++slot) {
+        for (int slot = 0; slot < inv.size(); slot++) {
             GenericStack stack = inv.getStack(slot);
             if (stack != null) {
                 if (flag) {

@@ -1,4 +1,4 @@
-package com.savitor.better_modification_tool.mixin.gtlcore.ae2.client.gui;
+package com.savitor.better_modification_tool.mixin.ae2.client.gui;
 
 import appeng.client.gui.WidgetContainer;
 import com.savitor.better_modification_tool.common.accessor.WidgetContainerAccessor;

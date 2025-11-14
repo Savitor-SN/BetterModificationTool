@@ -81,8 +81,9 @@ public class BetterCustomIconButton extends Button implements ITooltip {
 
     @Override
     public Rect2i getTooltipArea() {
-        return new Rect2i(this.getX(), this.getY(), 16, 16);
+        return new Rect2i(this.getX(), this.getY(), this.getWidth(), this.getHeight());
     }
+
 
     @Override
     public boolean isTooltipAreaVisible() {

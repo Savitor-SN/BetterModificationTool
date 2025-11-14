@@ -94,9 +94,9 @@ public abstract class PatternModifyScreenMixin extends AEBaseScreen<PatternModif
                 .addState(TARGET_TEXTURE.copy()
                         .src(16, 0, 16, 16), Component.translatable("gui.mae2a.target_product"))
                 .addState(TARGET_TEXTURE.copy()
-                        .src(32, 0, 16, 16), Component.translatable("gui.mae2a.target_all"))
+                        .src(32, 0, 16, 16), Component.translatable("gui.bmt.mae2a.target_all"))
                 .status(() -> ((SettingTargetModeAccessor) setting).BMT$getTargetMode().getStatus())
-                .message(Component.translatable("gui.mae2a.target_mode_tip"))
+                .message(Component.translatable("gui.bmt.mae2a.target_mode_tip"))
                 .build();
         addToLeftToolbar(BMT$targetModeButton);
         updateState(setting.getMode(), setting.isLimitMode());
@@ -117,7 +117,7 @@ public abstract class PatternModifyScreenMixin extends AEBaseScreen<PatternModif
                 tooltipB = "gui.mae2a.pattern_max_fluid_limit";
                 itemPlaceholderKey = "gui.mae2a.pattern_max_item_limit";
                 fluidPlaceholderKey = "gui.mae2a.pattern_max_fluid_limit";
-                ratePlaceholderTooltip = "gui.mae2a.pattern_rate_" + ((SettingTargetModeAccessor) setting).BMT$getTargetMode()
+                ratePlaceholderTooltip = "gui.bmt.mae2a.pattern_rate_" + ((SettingTargetModeAccessor) setting).BMT$getTargetMode()
                         .getName() + "_multiply";
                 tooltipKey = "gui.mae2a.max_input_tip";
 
@@ -127,7 +127,7 @@ public abstract class PatternModifyScreenMixin extends AEBaseScreen<PatternModif
                 tooltipB = "gui.mae2a.pattern_min_fluid_limit";
                 itemPlaceholderKey = "gui.mae2a.pattern_min_item_limit";
                 fluidPlaceholderKey = "gui.mae2a.pattern_min_fluid_limit";
-                ratePlaceholderTooltip = "gui.mae2a.pattern_rate_" + ((SettingTargetModeAccessor) setting).BMT$getTargetMode()
+                ratePlaceholderTooltip = "gui.bmt.mae2a.pattern_rate_" + ((SettingTargetModeAccessor) setting).BMT$getTargetMode()
                         .getName() + "_divide";
                 tooltipKey = "gui.mae2a.min_input_tip";
             }
